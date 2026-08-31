@@ -56,4 +56,4 @@ playButton.addEventListener("click", () => {
 
     console.log("Користувач натиснув ГРАТИ");
 
-});
+}); 
