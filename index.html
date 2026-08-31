@@ -2,164 +2,58 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    >
+    <title>Kairos</title>
 
-    <title>Lucky Casino</title>
-
-    <!-- Telegram Mini App -->
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-    <!-- Наш дизайн -->
     <link rel="stylesheet" href="styles.css">
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 
 <body>
 
     <div class="app">
 
-        <div class="header">
-            <div class="logo">
-                LUCKY<span>CASINO</span>
+        <header class="header">
+            <div class="logo">KAIROS</div>
+
+            <div class="balance">
+                <span>💰</span>
+                <span id="balance">0</span>
+            </div>
+        </header>
+
+        <main>
+
+            <div class="profile-card">
+                <div class="avatar" id="avatar">👤</div>
+
+                <div class="profile-info">
+                    <div class="welcome">Привіт 👋</div>
+                    <div class="username" id="username">
+                        Завантаження...
+                    </div>
+                </div>
             </div>
 
-            <div class="profile">
-                👤
-            </div>
-        </div>
+            <div class="game-card">
+                <div class="game-icon">🎰</div>
 
+                <div class="game-info">
+                    <h2>Casino</h2>
+                    <p>Обери гру та починай</p>
+                </div>
 
-        <div class="balance">
-
-            <div class="balance-title">
-                Ваш баланс
-            </div>
-
-            <div class="balance-value">
-                <span id="balance">1000</span> ⭐
-            </div>
-
-            <div class="buttons">
-
-                <button
-                    class="deposit"
-                    onclick="deposit()"
-                >
-                    Поповнити
+                <button class="play-button">
+                    ГРАТИ
                 </button>
-
-                <button
-                    class="withdraw"
-                    onclick="withdraw()"
-                >
-                    Вивести
-                </button>
-
             </div>
 
-        </div>
-
-
-        <div class="title">
-            🎰 Ігри
-        </div>
-
-
-        <div class="games">
-
-            <div class="game">
-
-                <div class="game-icon">
-                    🎰
-                </div>
-
-                <div class="game-name">
-                    Слоти
-                </div>
-
-                <button
-                    class="play"
-                    onclick="playGame('Слоти')"
-                >
-                    Грати
-                </button>
-
-            </div>
-
-
-            <div class="game">
-
-                <div class="game-icon">
-                    🎲
-                </div>
-
-                <div class="game-name">
-                    Dice
-                </div>
-
-                <button
-                    class="play"
-                    onclick="playGame('Dice')"
-                >
-                    Грати
-                </button>
-
-            </div>
-
-
-            <div class="game">
-
-                <div class="game-icon">
-                    🃏
-                </div>
-
-                <div class="game-name">
-                    Blackjack
-                </div>
-
-                <button
-                    class="play"
-                    onclick="playGame('Blackjack')"
-                >
-                    Грати
-                </button>
-
-            </div>
-
-
-            <div class="game">
-
-                <div class="game-icon">
-                    🎯
-                </div>
-
-                <div class="game-name">
-                    Roulette
-                </div>
-
-                <button
-                    class="play"
-                    onclick="playGame('Roulette')"
-                >
-                    Грати
-                </button>
-
-            </div>
-
-        </div>
-
-
-        <div class="footer">
-            Lucky Casino • Demo
-        </div>
+        </main>
 
     </div>
 
-
-    <!-- Наша логіка -->
     <script src="app.js"></script>
 
 </body>
