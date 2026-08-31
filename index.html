@@ -13,48 +13,78 @@
 
 <body>
 
-    <div class="app">
+<div class="app">
 
-        <header class="header">
-            <div class="logo">KAIROS</div>
+    <header class="header">
+        <div class="logo">KAIROS</div>
 
-            <div class="balance">
-                <span>💰</span>
-                <span id="balance">0</span>
-            </div>
-        </header>
+        <div class="balance">
+            💰 <span id="balance">0</span> $
+        </div>
+    </header>
 
-        <main>
+    <main>
 
-            <div class="profile-card">
-                <div class="avatar" id="avatar">👤</div>
+        <div class="profile-card">
 
-                <div class="profile-info">
-                    <div class="welcome">Привіт 👋</div>
-                    <div class="username" id="username">
-                        Завантаження...
-                    </div>
-                </div>
+            <div class="avatar" id="avatar">
+                👤
             </div>
 
-            <div class="game-card">
-                <div class="game-icon">🎰</div>
+            <div class="profile-info">
 
-                <div class="game-info">
-                    <h2>Casino</h2>
-                    <p>Обери гру та починай</p>
+                <div class="welcome">
+                    Привіт 👋
                 </div>
 
-                <button class="play-button">
-                    ГРАТИ
-                </button>
+                <div class="username" id="username">
+                    Завантаження...
+                </div>
+
+                <div class="telegram-id">
+                    ID: <span id="telegramId">...</span>
+                </div>
+
             </div>
 
-        </main>
+        </div>
 
-    </div>
+        <div class="status-card">
+            <div class="status-dot"></div>
 
-    <script src="app.js"></script>
+            <div>
+                <div class="status-title">
+                    Telegram підключено
+                </div>
+
+                <div class="status-text">
+                    Акаунт успішно зареєстрований
+                </div>
+            </div>
+        </div>
+
+        <div class="game-card">
+
+            <div class="game-icon">
+                🎰
+            </div>
+
+            <div class="game-info">
+                <h2>Casino</h2>
+                <p>Обери гру та починай</p>
+            </div>
+
+            <button class="play-button" id="playButton">
+                ГРАТИ
+            </button>
+
+        </div>
+
+    </main>
+
+</div>
+
+<script src="app.js"></script>
 
 </body>
 </html>
