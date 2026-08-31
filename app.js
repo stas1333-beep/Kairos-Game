@@ -1,50 +1,59 @@
 const tg = window.Telegram.WebApp;
 
+// Запускаємо Telegram Mini App
 tg.ready();
 tg.expand();
 
-let balance = 1000;
+// Отримуємо користувача Telegram
+const user = tg.initDataUnsafe?.user;
 
-function updateBalance() {
-    document.getElementById("balance").textContent = balance;
-}
+// Елементи сторінки
+const usernameElement = document.getElementById("username");
+const avatarElement = document.getElementById("avatar");
+const balanceElement = document.getElementById("balance");
 
-function playGame(game) {
-    if (balance < 10) {
-        tg.showAlert("Недостатньо ⭐");
-        return;
-    }
+// Початковий тестовий баланс
+let balance = 0;
 
-    balance -= 10;
+// Показуємо баланс
+balanceElement.textContent = balance;
 
-    const win = Math.random() < 0.45;
+// Перевіряємо користувача
+if (user) {
 
-    if (win) {
-        const prize = Math.floor(Math.random() * 40) + 20;
-        balance += prize;
-
-        tg.showAlert(
-            "🎉 " + game + "\n\nВи виграли " + prize + " ⭐"
-        );
+    // Username
+    if (user.username) {
+        usernameElement.textContent = "@" + user.username;
     } else {
-        tg.showAlert(
-            "😢 " + game + "\n\nВи програли 10 ⭐"
-        );
+        usernameElement.textContent = user.first_name || "Гравець";
     }
 
-    updateBalance();
+    // Перша літера імені замість стандартного аватара
+    if (user.first_name) {
+        avatarElement.textContent =
+            user.first_name.charAt(0).toUpperCase();
+    }
+
+    // Інформація в консоль
+    console.log("Telegram ID:", user.id);
+    console.log("Telegram username:", user.username);
+    console.log("Telegram first name:", user.first_name);
+    console.log("Telegram data:", user);
+
+} else {
+
+    usernameElement.textContent = "Відкрийте через Telegram";
+
+    console.log("Telegram user не знайдений");
 }
 
-function deposit() {
-    tg.showAlert(
-        "💰 Поповнення\n\nФункцію поповнення підключимо пізніше."
-    );
-}
+// Кнопка гри
+const playButton = document.querySelector(".play-button");
 
-function withdraw() {
-    tg.showAlert(
-        "💸 Виведення\n\nФункцію виведення підключимо пізніше."
-    );
-}
+playButton.addEventListener("click", () => {
 
-updateBalance();
+    tg.HapticFeedback.impactOccurred("medium");
+
+    console.log("Користувач натиснув ГРАТИ");
+
+});
