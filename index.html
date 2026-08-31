@@ -2,89 +2,116 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    >
     <title>Kairos</title>
-
     <link rel="stylesheet" href="styles.css">
-
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
-
 <body>
-
 <div class="app">
-
+    <!-- HEADER -->
     <header class="header">
-        <div class="logo">KAIROS</div>
-
-        <div class="balance">
-            💰 <span id="balance">0</span> $
+        <div class="brand">
+            <div class="brand-name">KAIROS</div>
+            <div class="brand-subtitle">CASINO</div>
+        </div>
+        <div class="balance-box">
+            <span class="balance-icon">◆</span>
+            <div>
+                <span class="balance-label">BALANCE</span>
+                <span class="balance-value" id="balance">0.00 $</span>
+            </div>
         </div>
     </header>
-
-    <main>
-
-        <div class="profile-card">
-
-            <div class="avatar" id="avatar">
-                👤
-            </div>
-
-            <div class="profile-info">
-
-                <div class="welcome">
-                    Привіт 👋
-                </div>
-
-                <div class="username" id="username">
-                    Завантаження...
-                </div>
-
-                <div class="telegram-id">
-                    ID: <span id="telegramId">...</span>
-                </div>
-
-            </div>
-
+    <!-- PROFILE -->
+    <section class="profile">
+        <div class="avatar" id="avatar">
+            K
         </div>
-
-        <div class="status-card">
-            <div class="status-dot"></div>
-
-            <div>
-                <div class="status-title">
-                    Telegram підключено
-                </div>
-
-                <div class="status-text">
-                    Акаунт успішно зареєстрований
-                </div>
+        <div class="profile-data">
+            <div class="profile-welcome">
+                WELCOME BACK
+            </div>
+            <div class="profile-name" id="username">
+                Гравець
+            </div>
+            <div class="profile-id">
+                ID: <span id="telegramId">...</span>
             </div>
         </div>
-
-        <div class="game-card">
-
-            <div class="game-icon">
+        <button class="profile-button">
+            ›
+        </button>
+    </section>
+    <!-- MAIN ACTIONS -->
+    <section class="actions">
+        <button class="action-button deposit-button">
+            <span class="action-icon">+</span>
+            <span>
+                <strong>ПОПОВНИТИ</strong>
+                <small>Поповнити баланс</small>
+            </span>
+        </button>
+        <button class="action-button withdraw-button">
+            <span class="action-icon">↗</span>
+            <span>
+                <strong>ВИВЕСТИ</strong>
+                <small>Вивести кошти</small>
+            </span>
+        </button>
+    </section>
+    <!-- GAMES TITLE -->
+    <div class="section-title">
+        <div>
+            <span class="section-small">KAIROS</span>
+            <h2>ІГРИ</h2>
+        </div>
+        <span class="online">
+            <i></i> ONLINE
+        </span>
+    </div>
+    <!-- GAMES -->
+    <section class="games">
+        <button class="game-card">
+            <div class="game-image">
                 🎰
             </div>
-
-            <div class="game-info">
-                <h2>Casino</h2>
-                <p>Обери гру та починай</p>
+            <div class="game-content">
+                <h3>Слоти</h3>
+                <p>Крути та вигравай</p>
             </div>
-
-            <button class="play-button" id="playButton">
-                ГРАТИ
-            </button>
-
-        </div>
-
-    </main>
-
+            <span class="game-arrow">›</span>
+        </button>
+        <button class="game-card">
+            <div class="game-image">
+                🃏
+            </div>
+            <div class="game-content">
+                <h3>Blackjack</h3>
+                <p>21 — твоя гра</p>
+            </div>
+            <span class="game-arrow">›</span>
+        </button>
+        <button class="game-card">
+            <div class="game-image">
+                💎
+            </div>
+            <div class="game-content">
+                <h3>Crash</h3>
+                <p>Забери виграш вчасно</p>
+            </div>
+            <span class="game-arrow">›</span>
+        </button>
+    </section>
+    <!-- FOOTER -->
+    <footer>
+        <span>KAIROS</span>
+        <span>FAIR PLAY</span>
+    </footer>
 </div>
-
 <script src="app.js"></script>
-
 </body>
 </html>
