@@ -14,104 +14,224 @@
 <div class="app">
     <!-- HEADER -->
     <header class="header">
-        <div class="brand">
-            <div class="brand-name">KAIROS</div>
-            <div class="brand-subtitle">CASINO</div>
+        <div class="logo">
+            <span>K</span>AIROS
         </div>
-        <div class="balance-box">
-            <span class="balance-icon">◆</span>
-            <div>
-                <span class="balance-label">BALANCE</span>
-                <span class="balance-value" id="balance">0.00 $</span>
-            </div>
-        </div>
+        <button class="header-profile" id="headerProfile">
+            <img id="headerAvatar" src="" alt="">
+            <span id="headerAvatarLetter">K</span>
+        </button>
     </header>
-    <!-- PROFILE -->
-    <section class="profile">
-        <div class="avatar" id="avatar">
-            K
-        </div>
-        <div class="profile-data">
-            <div class="profile-welcome">
-                WELCOME BACK
+    <!-- HOME -->
+    <main id="homePage">
+        <!-- USER -->
+        <section class="user-section">
+            <div class="hello">
+                ПРИВІТ 👋
             </div>
-            <div class="profile-name" id="username">
+            <div class="user-name" id="username">
                 Гравець
             </div>
-            <div class="profile-id">
-                ID: <span id="telegramId">...</span>
+            <div class="telegram-id">
+                ID <span id="telegramId">...</span>
+            </div>
+        </section>
+        <!-- BALANCE -->
+        <section class="balance-card">
+            <div class="balance-header">
+                <span>ВАШ БАЛАНС</span>
+                <span class="currency">USD</span>
+            </div>
+            <div class="balance-value">
+                <span id="balance">0.00</span>
+                <span>$</span>
+            </div>
+            <div class="balance-actions">
+                <button id="depositButton" class="primary-button">
+                    <span>＋</span>
+                    Поповнити
+                </button>
+                <button id="withdrawButton" class="secondary-button">
+                    <span>↗</span>
+                    Вивести
+                </button>
+            </div>
+        </section>
+        <!-- GAMES -->
+        <section class="games-section">
+            <div class="section-header">
+                <h2>Ігри</h2>
+                <button id="allGamesButton">
+                    Всі →
+                </button>
+            </div>
+            <div class="games-grid">
+                <button class="game-card" data-game="slots">
+                    <div class="game-art">
+                        <span>🎰</span>
+                    </div>
+                    <div class="game-title">
+                        Слоти
+                    </div>
+                    <div class="game-description">
+                        Крути барабани
+                    </div>
+                </button>
+                <button class="game-card" data-game="crash">
+                    <div class="game-art">
+                        <span>🚀</span>
+                    </div>
+                    <div class="game-title">
+                        Crash
+                    </div>
+                    <div class="game-description">
+                        Забери вчасно
+                    </div>
+                </button>
+                <button class="game-card" data-game="blackjack">
+                    <div class="game-art small">
+                        <span>🃏</span>
+                    </div>
+                    <div class="game-title">
+                        Blackjack
+                    </div>
+                    <div class="game-description">
+                        Гра до 21
+                    </div>
+                </button>
+                <button class="game-card" data-game="dice">
+                    <div class="game-art small">
+                        <span>🎲</span>
+                    </div>
+                    <div class="game-title">
+                        Dice
+                    </div>
+                    <div class="game-description">
+                        Перевір удачу
+                    </div>
+                </button>
+            </div>
+        </section>
+    </main>
+    <!-- GAMES PAGE -->
+    <section id="gamesPage" class="page hidden">
+        <div class="page-title">
+            <span>KAIROS</span>
+            <h1>Ігри</h1>
+        </div>
+        <div class="games-list">
+            <button class="list-game" data-game="slots">
+                <div class="list-icon">🎰</div>
+                <div>
+                    <strong>Слоти</strong>
+                    <small>Класичні барабани</small>
+                </div>
+                <b>›</b>
+            </button>
+            <button class="list-game" data-game="crash">
+                <div class="list-icon">🚀</div>
+                <div>
+                    <strong>Crash</strong>
+                    <small>Забери виграш вчасно</small>
+                </div>
+                <b>›</b>
+            </button>
+            <button class="list-game" data-game="blackjack">
+                <div class="list-icon">🃏</div>
+                <div>
+                    <strong>Blackjack</strong>
+                    <small>Гра до 21</small>
+                </div>
+                <b>›</b>
+            </button>
+            <button class="list-game" data-game="dice">
+                <div class="list-icon">🎲</div>
+                <div>
+                    <strong>Dice</strong>
+                    <small>Вгадай число</small>
+                </div>
+                <b>›</b>
+            </button>
+        </div>
+    </section>
+    <!-- HISTORY PAGE -->
+    <section id="historyPage" class="page hidden">
+        <div class="page-title">
+            <span>KAIROS</span>
+            <h1>Операції</h1>
+        </div>
+        <div id="historyList" class="history-list">
+            <div class="empty-history">
+                <div>↕</div>
+                <strong>Поки немає операцій</strong>
+                <small>
+                    Тут з'явиться історія поповнень,
+                    виведень та ігор.
+                </small>
             </div>
         </div>
-        <button class="profile-button">
-            ›
-        </button>
     </section>
-    <!-- MAIN ACTIONS -->
-    <section class="actions">
-        <button class="action-button deposit-button">
-            <span class="action-icon">+</span>
-            <span>
-                <strong>ПОПОВНИТИ</strong>
-                <small>Поповнити баланс</small>
-            </span>
-        </button>
-        <button class="action-button withdraw-button">
-            <span class="action-icon">↗</span>
-            <span>
-                <strong>ВИВЕСТИ</strong>
-                <small>Вивести кошти</small>
-            </span>
-        </button>
-    </section>
-    <!-- GAMES TITLE -->
-    <div class="section-title">
-        <div>
-            <span class="section-small">KAIROS</span>
-            <h2>ІГРИ</h2>
+    <!-- PROFILE PAGE -->
+    <section id="profilePage" class="page hidden">
+        <div class="page-title">
+            <span>KAIROS</span>
+            <h1>Профіль</h1>
         </div>
-        <span class="online">
-            <i></i> ONLINE
-        </span>
+        <div class="profile-card">
+            <div class="large-avatar">
+                <img id="profileAvatar" src="" alt="">
+                <span id="profileAvatarLetter">
+                    K
+                </span>
+            </div>
+            <div class="profile-name" id="profileName">
+                Гравець
+            </div>
+            <div class="profile-username" id="profileUsername">
+                @username
+            </div>
+        </div>
+        <div class="profile-info-card">
+            <div>
+                <span>Telegram ID</span>
+                <strong id="profileTelegramId">...</strong>
+            </div>
+            <div>
+                <span>Статус</span>
+                <strong>Активний</strong>
+            </div>
+        </div>
+    </section>
+    <!-- MODAL -->
+    <div id="modal" class="modal hidden">
+        <div class="modal-bg" id="modalBg"></div>
+        <div class="modal-box">
+            <button id="closeModal" class="close-modal">
+                ×
+            </button>
+            <div id="modalContent"></div>
+        </div>
     </div>
-    <!-- GAMES -->
-    <section class="games">
-        <button class="game-card">
-            <div class="game-image">
-                🎰
-            </div>
-            <div class="game-content">
-                <h3>Слоти</h3>
-                <p>Крути та вигравай</p>
-            </div>
-            <span class="game-arrow">›</span>
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav">
+        <button class="nav-item active" data-page="homePage">
+            <span>⌂</span>
+            <small>Головна</small>
         </button>
-        <button class="game-card">
-            <div class="game-image">
-                🃏
-            </div>
-            <div class="game-content">
-                <h3>Blackjack</h3>
-                <p>21 — твоя гра</p>
-            </div>
-            <span class="game-arrow">›</span>
+        <button class="nav-item" data-page="gamesPage">
+            <span>◈</span>
+            <small>Ігри</small>
         </button>
-        <button class="game-card">
-            <div class="game-image">
-                💎
-            </div>
-            <div class="game-content">
-                <h3>Crash</h3>
-                <p>Забери виграш вчасно</p>
-            </div>
-            <span class="game-arrow">›</span>
+        <button class="nav-item" data-page="historyPage">
+            <span>↕</span>
+            <small>Операції</small>
         </button>
-    </section>
-    <!-- FOOTER -->
-    <footer>
-        <span>KAIROS</span>
-        <span>FAIR PLAY</span>
-    </footer>
+        <button class="nav-item" data-page="profilePage">
+            <span>☰</span>
+            <small>Профіль</small>
+        </button>
+    </nav>
 </div>
 <script src="app.js"></script>
 </body>
-</html> 
+</html>
