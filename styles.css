@@ -2,135 +2,266 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    -webkit-tap-highlight-color: transparent;
 }
-
 body {
-    font-family: Arial, sans-serif;
-    background: #0b0b0f;
-    color: white;
+    background: #08090d;
+    color: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
     min-height: 100vh;
 }
-
+button {
+    font-family: inherit;
+    color: inherit;
+}
 .app {
     width: 100%;
-    max-width: 500px;
+    max-width: 520px;
     margin: 0 auto;
-    padding: 16px;
+    padding: 18px 16px 30px;
 }
-
+/* =========================
+   HEADER
+========================= */
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 25px;
+    margin-bottom: 24px;
 }
-
-.logo {
-    font-size: 24px;
+.brand-name {
+    font-size: 25px;
     font-weight: 900;
-    letter-spacing: 2px;
+    letter-spacing: 4px;
 }
-
-.balance {
+.brand-subtitle {
+    color: #666b78;
+    font-size: 8px;
+    letter-spacing: 4px;
+    margin-top: 4px;
+}
+.balance-box {
     display: flex;
     align-items: center;
-    gap: 6px;
-    background: #17171d;
-    border: 1px solid #292930;
-    padding: 9px 13px;
+    gap: 9px;
+    padding: 9px 12px;
+    background: #11131a;
+    border: 1px solid #20232d;
     border-radius: 12px;
-    font-weight: 700;
 }
-
-.profile-card {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    background: #15151b;
-    border: 1px solid #24242b;
-    border-radius: 18px;
-    padding: 16px;
-    margin-bottom: 18px;
-}
-
-.avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: #24242c;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-}
-
-.profile-info {
-    min-width: 0;
-}
-
-.welcome {
-    color: #8f8f99;
-    font-size: 13px;
-    margin-bottom: 4px;
-}
-
-.username {
-    font-size: 17px;
-    font-weight: 700;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.game-card {
-    background: #15151b;
-    border: 1px solid #24242b;
-    border-radius: 18px;
-    padding: 18px;
-
-    display: flex;
-    align-items: center;
-    gap: 14px;
-}
-
-.game-icon {
-    width: 55px;
-    height: 55px;
-    background: #24242c;
-    border-radius: 14px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 28px;
-}
-
-.game-info {
-    flex: 1;
-}
-
-.game-info h2 {
-    font-size: 17px;
-    margin-bottom: 5px;
-}
-
-.game-info p {
-    color: #8f8f99;
+.balance-icon {
     font-size: 12px;
 }
-
-.play-button {
-    border: none;
-    background: white;
-    color: black;
-
+.balance-label {
+    display: block;
+    color: #626773;
+    font-size: 7px;
+    letter-spacing: 1.5px;
+}
+.balance-value {
+    display: block;
+    margin-top: 2px;
+    font-size: 14px;
+    font-weight: 800;
+}
+/* =========================
+   PROFILE
+========================= */
+.profile {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    background:
+        linear-gradient(
+            135deg,
+            #151821,
+            #0f1117
+        );
+    border: 1px solid #252936;
+    border-radius: 18px;
+    margin-bottom: 14px;
+}
+.avatar {
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    background: #20232d;
+    font-size: 20px;
     font-weight: 900;
-    padding: 11px 14px;
-    border-radius: 11px;
-
+}
+.profile-data {
+    margin-left: 13px;
+    flex: 1;
+    min-width: 0;
+}
+.profile-welcome {
+    color: #646a77;
+    font-size: 8px;
+    letter-spacing: 2px;
+}
+.profile-name {
+    margin-top: 5px;
+    font-size: 17px;
+    font-weight: 800;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.profile-id {
+    margin-top: 5px;
+    color: #505561;
+    font-size: 9px;
+}
+.profile-button {
+    width: 32px;
+    height: 32px;
+    border: 0;
+    border-radius: 10px;
+    background: #1b1e27;
+    font-size: 22px;
+    color: #858b98;
+}
+/* =========================
+   ACTIONS
+========================= */
+.actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 28px;
+}
+.action-button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 66px;
+    border: 1px solid #242832;
+    border-radius: 15px;
+    background: #11131a;
+    text-align: left;
     cursor: pointer;
 }
-
-.play-button:active {
-    transform: scale(0.95);
-} 
+.action-button:active {
+    transform: scale(0.98);
+}
+.action-icon {
+    width: 35px;
+    height: 35px;
+    margin-left: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: #1d2029;
+    font-size: 19px;
+}
+.action-button strong {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+}
+.action-button small {
+    display: block;
+    margin-top: 4px;
+    color: #636975;
+    font-size: 8px;
+}
+/* =========================
+   SECTION TITLE
+========================= */
+.section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 12px;
+}
+.section-small {
+    color: #575d69;
+    font-size: 7px;
+    letter-spacing: 3px;
+}
+.section-title h2 {
+    margin-top: 3px;
+    font-size: 21px;
+    letter-spacing: 2px;
+}
+.online {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #666c77;
+    font-size: 8px;
+    letter-spacing: 1px;
+}
+.online i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ffffff;
+}
+/* =========================
+   GAMES
+========================= */
+.games {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.game-card {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 11px;
+    background: #11131a;
+    border: 1px solid #242832;
+    border-radius: 17px;
+    text-align: left;
+    cursor: pointer;
+}
+.game-card:active {
+    transform: scale(0.985);
+}
+.game-image {
+    width: 58px;
+    height: 58px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 13px;
+    background: #1b1e27;
+    font-size: 27px;
+}
+.game-content {
+    flex: 1;
+    margin-left: 13px;
+}
+.game-content h3 {
+    font-size: 15px;
+    font-weight: 800;
+}
+.game-content p {
+    margin-top: 5px;
+    color: #646a76;
+    font-size: 10px;
+}
+.game-arrow {
+    margin-right: 6px;
+    color: #636976;
+    font-size: 25px;
+}
+/* =========================
+   FOOTER
+========================= */
+footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    color: #3d424d;
+    font-size: 7px;
+    letter-spacing: 2px;
+}
