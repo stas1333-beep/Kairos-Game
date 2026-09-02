@@ -480,19 +480,12 @@ if (modalBg) {
 // ============================================
 // DEPOSIT
 // ============================================
-
-const depositButton =
-    document.getElementById(
-        "depositButton"
-    );
+const depositButton = document.getElementById("depositButton");
 
 if (depositButton) {
-
-    depositButton.addEventListener(
-        "click",
-        function () {
-
-            openModal(`
+  depositButton.addEventListener("click", createDeposit);
+}
+openModal(`
                 <div class="page-title">
                     <span>KAIROS</span>
                     <h1>Поповнення</h1>
@@ -727,4 +720,64 @@ if (headerProfile) {
             }
         }
     );
+}
+async function createDeposit() {
+  try {
+    const amount = prompt("Введіть суму поповнення в USDT:");
+
+    if (!amount) return;
+
+    const value = Number(amount);
+
+    if (!Number.isFinite(value) || value < 1) {
+      alert("Мінімальна сума — 1 USDT");
+      return;
+    }
+
+    const response = await fetch(
+      "https://tstpkqufbqdaytysmacw.supabase.co/functions/v1/Kairos-deposit",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          amount: value
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    console.log("KAIROS DEPOSIT:", data);
+
+    if (!response.ok || !data.success) {
+      throw new Error(
+        data.error || "Не вдалося створити рахунок"
+      );
+    }
+
+    const invoice = data.invoice;
+
+    const payUrl =
+      invoice.mini_app_invoice_url ||
+      invoice.bot_invoice_url ||
+      invoice.web_app_invoice_url;
+
+    if (!payUrl) {
+      throw new Error(
+        "Crypto Pay не повернув посилання на оплату"
+      );
+    }
+
+    window.open(payUrl, "_blank");
+
+  } catch (error) {
+    console.error("DEPOSIT ERROR:", error);
+
+    alert(
+      "Помилка поповнення:\n" +
+      (error.message || error)
+    );
+  }
 }
