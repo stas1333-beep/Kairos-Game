@@ -485,11 +485,6 @@ const depositButton = document.getElementById("depositButton");
 if (depositButton) {
   depositButton.addEventListener("click", createDeposit);
 }
-openModal(`
-                <div class="page-title">
-                    <span>KAIROS</span>
-                    <h1>Поповнення</h1>
-                </div> 
 // ============================================
 // WITHDRAW
 // ============================================
