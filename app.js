@@ -460,7 +460,32 @@ function showError(message) {
 // DEPOSIT BUTTON
 // =====================================
 
+// =====================================
+// DEPOSIT BUTTON
+// =====================================
+
+document.addEventListener("click", function (event) {
+    console.log("KAIROS CLICK:", event.target);
+
+    if (
+        event.target &&
+        (
+            event.target.id === "depositButton" ||
+            event.target.closest("#depositButton")
+        )
+    ) {
+        console.log(
+            "KAIROS: DEPOSIT BUTTON CLICK DETECTED"
+        );
+
+        alert(
+            "КНОПКА ПОПОВНЕННЯ НАТИСНУТА"
+        );
+    }
+});
+
 function setupDepositButton() {
+    function setupDepositButton() {
 
     console.log(
         "KAIROS: SEARCHING DEPOSIT BUTTON"
