@@ -3,594 +3,301 @@ const tg = window.Telegram.WebApp;
 tg.ready();
 tg.expand();
 
-// ============================================
-// KAIROS CONFIG
-// ============================================
-
 const SUPABASE_URL =
     "https://tstpkqufbqdaytysmacw.supabase.co";
 
 const KAIROS_FUNCTION_URL =
     SUPABASE_URL + "/functions/v1/Kairos-user";
 
-// Реальний URL функції депозиту
 const DEPOSIT_FUNCTION_URL =
     SUPABASE_URL + "/functions/v1/bright-handler";
 
-// ============================================
-// TELEGRAM
-// ============================================
+let currentUser = null;
 
-const telegramUser =
-    tg.initDataUnsafe?.user || null;
+// =========================
+// DOM
+// =========================
 
-// ============================================
-// ELEMENTS
-// ============================================
+const usernameEl = document.getElementById("username");
+const telegramIdEl = document.getElementById("telegramId");
+const balanceEl = document.getElementById("balance");
 
-const usernameElement =
-    document.getElementById("username");
+const avatarEl = document.getElementById("avatar");
+const profileAvatarEl = document.getElementById("profileAvatar");
 
-const telegramIdElement =
-    document.getElementById("telegramId");
+const homePage = document.getElementById("homePage");
+const gamesPage = document.getElementById("gamesPage");
+const historyPage = document.getElementById("historyPage");
+const profilePage = document.getElementById("profilePage");
 
-const balanceElement =
-    document.getElementById("balance");
+const depositButton = document.getElementById("depositButton");
 
-const headerAvatar =
-    document.getElementById("headerAvatar");
+// =========================
+// HELPERS
+// =========================
 
-const headerAvatarLetter =
-    document.getElementById("headerAvatarLetter");
+function setBalance(balance) {
+    if (!balanceEl) return;
 
-const profileAvatar =
-    document.getElementById("profileAvatar");
+    const value = Number(balance || 0);
 
-const profileAvatarLetter =
-    document.getElementById("profileAvatarLetter");
-
-const profileName =
-    document.getElementById("profileName");
-
-const profileUsername =
-    document.getElementById("profileUsername");
-
-const profileTelegramId =
-    document.getElementById("profileTelegramId");
-
-// ============================================
-// PLAYER
-// ============================================
-
-let player = null;
-let balance = 0;
-
-// ============================================
-// BALANCE
-// ============================================
-
-function updateBalance() {
-
-    if (!balanceElement) return;
-
-    balanceElement.textContent =
-        Number(balance).toFixed(2);
+    balanceEl.textContent =
+        value.toFixed(2) + " USDT";
 }
 
-// ============================================
-// LOAD TELEGRAM USER
-// ============================================
+function setUserData(user) {
+    if (!user) return;
 
-async function loadTelegramUser() {
+    currentUser = user;
 
-    if (!telegramUser) {
-
-        if (usernameElement) {
-            usernameElement.textContent =
-                "Відкрийте через Telegram";
-        }
-
-        if (telegramIdElement) {
-            telegramIdElement.textContent =
-                "Не визначено";
-        }
-
-        return;
+    if (usernameEl) {
+        usernameEl.textContent =
+            user.username
+                ? "@" + user.username
+                : user.first_name || "User";
     }
 
-    console.log(
-        "KAIROS TELEGRAM USER:",
-        telegramUser
-    );
+    if (telegramIdEl) {
+        telegramIdEl.textContent =
+            user.telegram_id || "";
+    }
 
+    setBalance(user.balance);
+
+    if (user.photo_url) {
+        if (avatarEl) {
+            avatarEl.src = user.photo_url;
+        }
+
+        if (profileAvatarEl) {
+            profileAvatarEl.src = user.photo_url;
+        }
+    }
+}
+
+// =========================
+// TELEGRAM AUTH
+// =========================
+
+async function loadTelegramUser() {
     try {
+        console.log("KAIROS: loading Telegram user");
 
-        const response =
-            await fetch(
-                KAIROS_FUNCTION_URL,
-                {
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body: JSON.stringify({
-                        initData:
-                            tg.initData
-                    })
-                }
+        if (!tg.initData) {
+            throw new Error(
+                "Telegram initData відсутній. Відкрий Mini App саме через Telegram."
             );
+        }
 
-        const result =
-            await response.json();
+        console.log(
+            "KAIROS: initData exists"
+        );
+
+        const response = await fetch(
+            KAIROS_FUNCTION_URL,
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    initData: tg.initData
+                })
+            }
+        );
+
+        console.log(
+            "KAIROS USER STATUS:",
+            response.status
+        );
+
+        const result = await response.json();
 
         console.log(
             "KAIROS USER RESPONSE:",
             result
         );
 
-        if (
-            !response.ok ||
-            !result.success
-        ) {
-
+        if (!response.ok || !result.success) {
             throw new Error(
                 result.error ||
                 "Помилка авторизації"
             );
         }
 
-        player =
-            result.user;
+        setUserData(result.user);
 
-        balance =
-            Number(
-                player.balance || 0
-            );
-
-        // ====================================
-        // NAME
-        // ====================================
-
-        let fullName =
-            player.first_name || "";
-
-        if (player.last_name) {
-
-            fullName +=
-                " " +
-                player.last_name;
-        }
-
-        if (!fullName) {
-            fullName = "Гравець";
-        }
-
-        // ====================================
-        // MAIN
-        // ====================================
-
-        if (usernameElement) {
-
-            usernameElement.textContent =
-                fullName;
-        }
-
-        if (telegramIdElement) {
-
-            telegramIdElement.textContent =
-                player.telegram_id;
-        }
-
-        // ====================================
-        // HEADER AVATAR
-        // ====================================
-
-        if (
-            player.photo_url &&
-            headerAvatar
-        ) {
-
-            headerAvatar.src =
-                player.photo_url;
-
-            headerAvatar.classList.add(
-                "visible"
-            );
-
-            if (headerAvatarLetter) {
-
-                headerAvatarLetter.style.display =
-                    "none";
-            }
-
-        } else if (
-            headerAvatarLetter
-        ) {
-
-            headerAvatarLetter.textContent =
-                (
-                    player.first_name ||
-                    "K"
-                )
-                    .charAt(0)
-                    .toUpperCase();
-
-            headerAvatarLetter.style.display =
-                "";
-        }
-
-        // ====================================
-        // PROFILE
-        // ====================================
-
-        if (profileName) {
-
-            profileName.textContent =
-                fullName;
-        }
-
-        if (profileTelegramId) {
-
-            profileTelegramId.textContent =
-                player.telegram_id;
-        }
-
-        if (profileUsername) {
-
-            profileUsername.textContent =
-                player.username
-                    ? "@" + player.username
-                    : "Username відсутній";
-        }
-
-        // ====================================
-        // PROFILE AVATAR
-        // ====================================
-
-        if (
-            player.photo_url &&
-            profileAvatar
-        ) {
-
-            profileAvatar.src =
-                player.photo_url;
-
-            profileAvatar.classList.add(
-                "visible"
-            );
-
-            if (profileAvatarLetter) {
-
-                profileAvatarLetter.style.display =
-                    "none";
-            }
-
-        } else if (
-            profileAvatarLetter
-        ) {
-
-            profileAvatarLetter.textContent =
-                (
-                    player.first_name ||
-                    "K"
-                )
-                    .charAt(0)
-                    .toUpperCase();
-
-            profileAvatarLetter.style.display =
-                "";
-        }
-
-        updateBalance();
+        console.log(
+            "KAIROS: авторизація успішна"
+        );
 
     } catch (error) {
 
         console.error(
-            "KAIROS USER ERROR:",
+            "KAIROS AUTH ERROR:",
             error
         );
 
-        if (usernameElement) {
-
-            usernameElement.textContent =
-                "Помилка підключення";
-        }
-    }
-}
-
-// ============================================
-// NAVIGATION
-// ============================================
-
-const pages = [
-    "homePage",
-    "gamesPage",
-    "historyPage",
-    "profilePage"
-];
-
-const navItems =
-    document.querySelectorAll(
-        ".nav-item"
-    );
-
-navItems.forEach(
-    function (item) {
-
-        item.addEventListener(
-            "click",
-            function () {
-
-                const pageId =
-                    item.dataset.page;
-
-                pages.forEach(
-                    function (id) {
-
-                        const page =
-                            document.getElementById(
-                                id
-                            );
-
-                        if (page) {
-
-                            page.classList.add(
-                                "hidden"
-                            );
-                        }
-                    }
-                );
-
-                const selectedPage =
-                    document.getElementById(
-                        pageId
-                    );
-
-                if (selectedPage) {
-
-                    selectedPage.classList.remove(
-                        "hidden"
-                    );
-                }
-
-                navItems.forEach(
-                    function (nav) {
-
-                        nav.classList.remove(
-                            "active"
-                        );
-                    }
-                );
-
-                item.classList.add(
-                    "active"
-                );
-
-                if (tg.HapticFeedback) {
-
-                    tg.HapticFeedback
-                        .impactOccurred(
-                            "light"
-                        );
-                }
-            }
+        alert(
+            "Помилка авторизації:\n" +
+            error.message
         );
     }
-);
+}
 
-// ============================================
-// MODAL
-// ============================================
+// =========================
+// NAVIGATION
+// =========================
 
-const modal =
-    document.getElementById("modal");
+function hideAllPages() {
+    if (homePage) homePage.style.display = "none";
+    if (gamesPage) gamesPage.style.display = "none";
+    if (historyPage) historyPage.style.display = "none";
+    if (profilePage) profilePage.style.display = "none";
+}
 
-const modalContent =
-    document.getElementById(
-        "modalContent"
-    );
+function showPage(page) {
+    hideAllPages();
 
-const closeModal =
-    document.getElementById(
-        "closeModal"
-    );
-
-const modalBg =
-    document.getElementById(
-        "modalBg"
-    );
-
-function openModal(content) {
-
-    if (
-        !modal ||
-        !modalContent
-    ) {
-        return;
-    }
-
-    modalContent.innerHTML =
-        content;
-
-    modal.classList.remove(
-        "hidden"
-    );
-
-    if (tg.HapticFeedback) {
-
-        tg.HapticFeedback
-            .impactOccurred(
-                "light"
-            );
+    if (page) {
+        page.style.display = "block";
     }
 }
 
-function closeModalWindow() {
+const homeButton =
+    document.getElementById("homeButton");
 
-    if (
-        !modal ||
-        !modalContent
-    ) {
-        return;
-    }
+const gamesButton =
+    document.getElementById("gamesButton");
 
-    modal.classList.add(
-        "hidden"
-    );
+const historyButton =
+    document.getElementById("historyButton");
 
-    modalContent.innerHTML =
-        "";
-}
+const profileButton =
+    document.getElementById("profileButton");
 
-if (closeModal) {
-
-    closeModal.addEventListener(
+if (homeButton) {
+    homeButton.addEventListener(
         "click",
-        closeModalWindow
+        () => showPage(homePage)
     );
 }
 
-if (modalBg) {
-
-    modalBg.addEventListener(
+if (gamesButton) {
+    gamesButton.addEventListener(
         "click",
-        closeModalWindow
+        () => showPage(gamesPage)
     );
 }
 
-// ============================================
-// DEPOSIT BUTTON
-// ============================================
-
-const depositButton =
-    document.getElementById(
-        "depositButton"
-    );
-
-if (depositButton) {
-
-    depositButton.addEventListener(
+if (historyButton) {
+    historyButton.addEventListener(
         "click",
-        createDeposit
-    );
-
-    console.log(
-        "KAIROS: Deposit button connected"
-    );
-
-} else {
-
-    console.error(
-        "KAIROS ERROR: depositButton НЕ ЗНАЙДЕНО"
+        () => showPage(historyPage)
     );
 }
 
-// ============================================
-// CREATE DEPOSIT
-// ============================================
+if (profileButton) {
+    profileButton.addEventListener(
+        "click",
+        () => showPage(profilePage)
+    );
+}
+
+// =========================
+// DEPOSIT
+// =========================
 
 async function createDeposit() {
 
-    console.log(
-        "KAIROS: CREATE DEPOSIT"
-    );
-
     try {
 
-        const amount =
+        if (!tg.initData) {
+            throw new Error(
+                "Telegram initData відсутній."
+            );
+        }
+
+        const input =
             prompt(
                 "Введіть суму поповнення в USDT:"
             );
 
-        if (!amount) {
+        if (input === null) {
             return;
         }
 
-        const value =
-            Number(amount);
-
-        if (
-            !Number.isFinite(value) ||
-            value < 1
-        ) {
-
-            alert(
-                "Мінімальна сума — 1 USDT"
+        const amount =
+            Number(
+                input.replace(",", ".")
             );
 
-            return;
+        if (!Number.isFinite(amount)) {
+            throw new Error(
+                "Введіть правильну суму."
+            );
         }
 
-        if (tg.HapticFeedback) {
-
-            tg.HapticFeedback
-                .impactOccurred(
-                    "medium"
-                );
+        if (amount < 1) {
+            throw new Error(
+                "Мінімальна сума — 1 USDT."
+            );
         }
-
-        alert(
-            "Запит на поповнення обробляється..."
-        );
 
         console.log(
             "KAIROS DEPOSIT URL:",
             DEPOSIT_FUNCTION_URL
         );
 
-        const response =
-            await fetch(
-                DEPOSIT_FUNCTION_URL,
-                {
-                    method: "POST",
+        alert(
+            "Запит на поповнення обробляється..."
+        );
 
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
+        const response = await fetch(
+            DEPOSIT_FUNCTION_URL,
+            {
+                method: "POST",
 
-                    body: JSON.stringify({
-                        amount: value,
-                        initData:
-                            tg.initData
-                    })
-                }
-            );
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    amount: amount,
+                    initData: tg.initData
+                })
+            }
+        );
 
         console.log(
             "KAIROS DEPOSIT STATUS:",
             response.status
         );
 
-        const data =
+        const result =
             await response.json();
 
         console.log(
             "KAIROS DEPOSIT RESPONSE:",
-            data
+            result
         );
 
-        if (
-            !response.ok ||
-            !data.success
-        ) {
+        if (!response.ok || !result.success) {
 
             throw new Error(
-                data.error ||
-                "Не вдалося створити рахунок"
+                result.error ||
+                "Не вдалося створити рахунок."
             );
         }
 
         const invoice =
-            data.invoice;
+            result.invoice;
 
         if (!invoice) {
-
             throw new Error(
-                "Crypto Pay не повернув invoice"
+                "Сервер не повернув invoice."
             );
         }
 
@@ -599,37 +306,25 @@ async function createDeposit() {
             invoice
         );
 
-        const payUrl =
+        const paymentUrl =
             invoice.mini_app_invoice_url ||
             invoice.bot_invoice_url ||
-            invoice.web_app_invoice_url ||
-            invoice.pay_url;
+            invoice.web_app_invoice_url;
 
-        if (!payUrl) {
-
+        if (!paymentUrl) {
             throw new Error(
-                "Crypto Pay не повернув посилання на оплату"
+                "Посилання на оплату не отримано."
             );
         }
 
         console.log(
             "KAIROS PAYMENT URL:",
-            payUrl
+            paymentUrl
         );
 
-        if (tg.openTelegramLink) {
-
-            tg.openTelegramLink(
-                payUrl
-            );
-
-        } else {
-
-            window.open(
-                payUrl,
-                "_blank"
-            );
-        }
+        tg.openTelegramLink(
+            paymentUrl
+        );
 
     } catch (error) {
 
@@ -639,241 +334,31 @@ async function createDeposit() {
         );
 
         alert(
-            "Помилка поповнення:\n\n" +
-            (
-                error.message ||
-                error
-            )
+            "Помилка поповнення:\n" +
+            error.message
         );
     }
 }
 
-// ============================================
-// WITHDRAW
-// ============================================
+// =========================
+// DEPOSIT BUTTON
+// =========================
 
-const withdrawButton =
-    document.getElementById(
-        "withdrawButton"
-    );
+if (depositButton) {
 
-if (withdrawButton) {
-
-    withdrawButton.addEventListener(
+    depositButton.addEventListener(
         "click",
-        function () {
-
-            openModal(`
-                <div class="page-title">
-                    <span>KAIROS</span>
-                    <h1>Виведення</h1>
-                </div>
-
-                <p style="
-                    color:#777c87;
-                    font-size:12px;
-                    line-height:1.5;
-                ">
-                    Система виведення
-                    буде підключена
-                    на наступному етапі.
-                </p>
-            `);
-        }
+        createDeposit
     );
+
 }
 
-// ============================================
-// GAMES
-// ============================================
-
-document
-    .querySelectorAll("[data-game]")
-    .forEach(
-        function (button) {
-
-            button.addEventListener(
-                "click",
-                function () {
-
-                    const game =
-                        button.dataset.game;
-
-                    if (tg.HapticFeedback) {
-
-                        tg.HapticFeedback
-                            .impactOccurred(
-                                "medium"
-                            );
-                    }
-
-                    openModal(`
-                        <div class="page-title">
-                            <span>KAIROS</span>
-                            <h1>${game}</h1>
-                        </div>
-
-                        <p style="
-                            color:#777c87;
-                            font-size:12px;
-                            line-height:1.5;
-                        ">
-                            Гра буде підключена
-                            на наступному етапі.
-                        </p>
-                    `);
-                }
-            );
-        }
-    );
-
-// ============================================
-// ALL GAMES
-// ============================================
-
-const allGamesButton =
-    document.getElementById(
-        "allGamesButton"
-    );
-
-if (allGamesButton) {
-
-    allGamesButton.addEventListener(
-        "click",
-        function () {
-
-            pages.forEach(
-                function (id) {
-
-                    const page =
-                        document.getElementById(
-                            id
-                        );
-
-                    if (page) {
-
-                        page.classList.add(
-                            "hidden"
-                        );
-                    }
-                }
-            );
-
-            const gamesPage =
-                document.getElementById(
-                    "gamesPage"
-                );
-
-            if (gamesPage) {
-
-                gamesPage.classList.remove(
-                    "hidden"
-                );
-            }
-
-            navItems.forEach(
-                function (nav) {
-
-                    nav.classList.remove(
-                        "active"
-                    );
-                }
-            );
-
-            const gamesNav =
-                document.querySelector(
-                    '[data-page="gamesPage"]'
-                );
-
-            if (gamesNav) {
-
-                gamesNav.classList.add(
-                    "active"
-                );
-            }
-        }
-    );
-}
-
-// ============================================
-// PROFILE BUTTON
-// ============================================
-
-const headerProfile =
-    document.getElementById(
-        "headerProfile"
-    );
-
-if (headerProfile) {
-
-    headerProfile.addEventListener(
-        "click",
-        function () {
-
-            pages.forEach(
-                function (id) {
-
-                    const page =
-                        document.getElementById(
-                            id
-                        );
-
-                    if (page) {
-
-                        page.classList.add(
-                            "hidden"
-                        );
-                    }
-                }
-            );
-
-            const profilePage =
-                document.getElementById(
-                    "profilePage"
-                );
-
-            if (profilePage) {
-
-                profilePage.classList.remove(
-                    "hidden"
-                );
-            }
-
-            navItems.forEach(
-                function (nav) {
-
-                    nav.classList.remove(
-                        "active"
-                    );
-                }
-            );
-
-            const profileNav =
-                document.querySelector(
-                    '[data-page="profilePage"]'
-                );
-
-            if (profileNav) {
-
-                profileNav.classList.add(
-                    "active"
-                );
-            }
-        }
-    );
-}
-
-// ============================================
-// START KAIROS
-// ============================================
+// =========================
+// START
+// =========================
 
 console.log(
-    "🚀 KAIROS APP STARTED"
-);
-
-console.log(
-    "KAIROS DEPOSIT ENDPOINT:",
-    DEPOSIT_FUNCTION_URL
+    "KAIROS APP STARTED"
 );
 
 loadTelegramUser();
