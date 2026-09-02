@@ -13,6 +13,9 @@ const SUPABASE_URL =
 const KAIROS_FUNCTION_URL =
     SUPABASE_URL + "/functions/v1/Kairos-user";
 
+const DEPOSIT_FUNCTION_URL =
+    SUPABASE_URL + "/functions/v1/Kairos-deposit";
+
 // ============================================
 // TELEGRAM
 // ============================================
@@ -105,10 +108,6 @@ async function loadTelegramUser() {
 
     try {
 
-        // ====================================
-        // SEND TELEGRAM INIT DATA
-        // ====================================
-
         const response = await fetch(
             KAIROS_FUNCTION_URL,
             {
@@ -133,10 +132,6 @@ async function loadTelegramUser() {
             "KAIROS RESPONSE:",
             result
         );
-
-        // ====================================
-        // ERROR
-        // ====================================
 
         if (!response.ok || !result.success) {
 
@@ -222,10 +217,15 @@ async function loadTelegramUser() {
         } else if (headerAvatarLetter) {
 
             headerAvatarLetter.textContent =
-                (player.first_name ||
-                    "K")
+                (
+                    player.first_name ||
+                    "K"
+                )
                     .charAt(0)
                     .toUpperCase();
+
+            headerAvatarLetter.style.display =
+                "";
         }
 
         // ====================================
@@ -277,10 +277,15 @@ async function loadTelegramUser() {
         } else if (profileAvatarLetter) {
 
             profileAvatarLetter.textContent =
-                (player.first_name ||
-                    "K")
+                (
+                    player.first_name ||
+                    "K"
+                )
                     .charAt(0)
                     .toUpperCase();
+
+            profileAvatarLetter.style.display =
+                "";
         }
 
         // ====================================
@@ -313,12 +318,6 @@ async function loadTelegramUser() {
         }
     }
 }
-
-// ============================================
-// START
-// ============================================
-
-loadTelegramUser();
 
 // ============================================
 // NAVIGATION
@@ -449,8 +448,10 @@ function openModal(content) {
 
 function closeModalWindow() {
 
-    if (!modal ||
-        !modalContent)
+    if (
+        !modal ||
+        !modalContent
+    )
         return;
 
     modal.classList.add(
@@ -480,11 +481,174 @@ if (modalBg) {
 // ============================================
 // DEPOSIT
 // ============================================
-const depositButton = document.getElementById("depositButton");
+
+const depositButton =
+    document.getElementById(
+        "depositButton"
+    );
 
 if (depositButton) {
-  depositButton.addEventListener("click", createDeposit);
+
+    depositButton.addEventListener(
+        "click",
+        createDeposit
+    );
 }
+
+// ============================================
+// CREATE CRYPTO PAY INVOICE
+// ============================================
+
+async function createDeposit() {
+
+    try {
+
+        const amount =
+            prompt(
+                "Введіть суму поповнення в USDT:"
+            );
+
+        if (!amount) {
+            return;
+        }
+
+        const value =
+            Number(amount);
+
+        if (
+            !Number.isFinite(value) ||
+            value < 1
+        ) {
+
+            alert(
+                "Мінімальна сума — 1 USDT"
+            );
+
+            return;
+        }
+
+        if (
+            tg.HapticFeedback
+        ) {
+
+            tg.HapticFeedback
+                .impactOccurred(
+                    "medium"
+                );
+        }
+
+        console.log(
+            "Creating Crypto Pay invoice:",
+            value
+        );
+
+        const response =
+            await fetch(
+                DEPOSIT_FUNCTION_URL,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        amount: value,
+                        initData:
+                            tg.initData
+                    })
+                }
+            );
+
+        const data =
+            await response.json();
+
+        console.log(
+            "KAIROS DEPOSIT RESPONSE:",
+            data
+        );
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            throw new Error(
+                data.error ||
+                "Не вдалося створити рахунок"
+            );
+        }
+
+        const invoice =
+            data.invoice;
+
+        if (!invoice) {
+
+            throw new Error(
+                "Crypto Pay не повернув invoice"
+            );
+        }
+
+        const payUrl =
+            invoice.mini_app_invoice_url ||
+            invoice.bot_invoice_url ||
+            invoice.web_app_invoice_url;
+
+        if (!payUrl) {
+
+            console.error(
+                "Invoice:",
+                invoice
+            );
+
+            throw new Error(
+                "Crypto Pay не повернув посилання на оплату"
+            );
+        }
+
+        console.log(
+            "Crypto Pay URL:",
+            payUrl
+        );
+
+        // ====================================
+        // OPEN PAYMENT
+        // ====================================
+
+        if (
+            tg.openTelegramLink
+        ) {
+
+            tg.openTelegramLink(
+                payUrl
+            );
+
+        } else {
+
+            window.open(
+                payUrl,
+                "_blank"
+            );
+        }
+
+    } catch (error) {
+
+        console.error(
+            "DEPOSIT ERROR:",
+            error
+        );
+
+        alert(
+            "Помилка поповнення:\n" +
+            (
+                error.message ||
+                error
+            )
+        );
+    }
+}
+
 // ============================================
 // WITHDRAW
 // ============================================
@@ -701,63 +865,9 @@ if (headerProfile) {
         }
     );
 }
-async function createDeposit() {
-  try {
-    const amount = prompt("Введіть суму поповнення в USDT:");
 
-    if (!amount) return;
+// ============================================
+// START KAIROS
+// ============================================
 
-    const value = Number(amount);
-
-    if (!Number.isFinite(value) || value < 1) {
-      alert("Мінімальна сума — 1 USDT");
-      return;
-    }
-
-    const response = await fetch(
-      "https://tstpkqufbqdaytysmacw.supabase.co/functions/v1/Kairos-deposit",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          amount: value
-        })
-      }
-    );
-
-    const data = await response.json();
-
-    console.log("KAIROS DEPOSIT:", data);
-
-    if (!response.ok || !data.success) {
-      throw new Error(
-        data.error || "Не вдалося створити рахунок"
-      );
-    }
-
-    const invoice = data.invoice;
-
-    const payUrl =
-      invoice.mini_app_invoice_url ||
-      invoice.bot_invoice_url ||
-      invoice.web_app_invoice_url;
-
-    if (!payUrl) {
-      throw new Error(
-        "Crypto Pay не повернув посилання на оплату"
-      );
-    }
-
-    window.open(payUrl, "_blank");
-
-  } catch (error) {
-    console.error("DEPOSIT ERROR:", error);
-
-    alert(
-      "Помилка поповнення:\n" +
-      (error.message || error)
-    );
-  }
-}
+loadTelegramUser();
