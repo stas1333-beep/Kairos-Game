@@ -459,11 +459,6 @@ function showError(message) {
 // =====================================
 // DEPOSIT BUTTON
 // =====================================
-
-// =====================================
-// DEPOSIT BUTTON
-// =====================================
-
 document.addEventListener("click", function (event) {
     console.log("KAIROS CLICK:", event.target);
 
