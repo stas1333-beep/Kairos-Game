@@ -1,7 +1,7 @@
 const tg = window.Telegram?.WebApp;
 
 console.log("KAIROS APP: START");
-
+alert("НОВИЙ APP.JS ЗАПУСТИВСЯ");
 if (!tg) {
     console.error("KAIROS ERROR: Telegram WebApp недоступний");
 } else {
