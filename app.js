@@ -877,4 +877,3 @@ console.log(
 );
 
 loadTelegramUser();
-```
